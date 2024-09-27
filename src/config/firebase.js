@@ -1,7 +1,7 @@
 
 
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore"
 import { toast } from "react-toastify";
 
@@ -41,10 +41,26 @@ const signup = async (username, email, password) => {
       });
       console.log('User document created successfully');
     } catch (error) {
-      console.error('Signup error:', error.message);
-      toast.error(error.code);
+      toast.error("Người dùng đã tồn tại")
     }
   };
-  
 
-export {signup}
+const login = async (email,password) => {
+    try {
+      await signInWithEmailAndPassword(auth,email,password);
+      toast.success("Đăng nhập thành công")
+    } catch (error) {
+      toast.error("Đăng nhập thất bại, sai email hoặc password")
+    }
+}
+
+const logout = async () =>{
+  try {
+    await signOut(auth)
+  } catch (error) {
+    toast.success("Đăng xuất thành công")
+  }
+   
+}
+
+export {signup,login,logout, auth,db}

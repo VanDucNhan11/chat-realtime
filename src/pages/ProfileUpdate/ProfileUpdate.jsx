@@ -1,26 +1,96 @@
-import React, { useState } from 'react'
+import { async } from '@firebase/util';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import React, { useContext, useState } from 'react'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import assets from '../../assets/assets'
+import { auth, db } from '../../config/firebase';
+import { AppContext } from '../../context/AppContext';
+import upload from '../../lib/upload';
 import './ProfileUpdate.css'
 
 const ProfileUpdate = () => {
 
+  const navigate = useNavigate();
+
   const [image, setImage] = useState(false);
+  const [name,setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [uid, serUid] = useState("");
+  const [prevImage, setPervImage] = useState("");
+  const {setUserData} = useContext(AppContext);
+
+  const profileUpdate = async (event) =>{
+      event.preventDefault();
+      try {
+        if (!prevImage && !image) {
+          toast.error(" Vui lòng Cập nhật ảnh đại diện")
+        }
+        const docRef = doc(db,'users',uid);
+        if (image) {
+          const imgUrl = await upload(image);
+          setPervImage(imgUrl);
+          await updateDoc(docRef,{
+            avatar:imgUrl,
+            bio:bio,
+            name:name
+          })
+        }
+        else{
+          await updateDoc(docRef,{
+            bio:bio,
+            name:name
+          })
+        }
+        const snap = await getDoc(docRef);
+        setUserData(snap.data());
+        navigate('/chat');
+        toast.success("Cập nhật thông tin thành công")
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message);
+      }
+  }
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, async (user) =>{
+      if (user) {
+        serUid(user.uid)
+        const docRef = doc(db,"users",user.uid);
+        const docSnap = await getDoc(docRef)
+        if (docSnap.data().name) {
+          setName(docSnap.data().name)
+        }
+        if (docSnap.data().bio) {
+          setBio(docSnap.data().bio)
+        }
+        if (docSnap.data().avatar) {
+          setPervImage(docSnap.data().avatar)
+        }
+      }
+      else {
+        navigate('/')
+      }
+    })
+  })
 
   return (
     <div className='profile'>
       <div className="profile-container">
-        <form>
+        <form onSubmit={profileUpdate}>
             <h3>Thông tin chi tiết</h3>
             <label htmlFor="avatar">
               <input onChange={(e)=>setImage(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden/>
               <img src={image? URL.createObjectURL(image) : assets.avatar_icon} alt="" />
               Cập nhật ảnh đại diện
             </label>
-            <input type="text" placeholder='Tên của bạn' required/>
-            <textarea placeholder='Tiểu sử' required></textarea>
+            <input onChange={(e)=>setName(e.target.value)} value={name}  type="text" placeholder='Tên của bạn' required/>
+            <textarea onChange={(e)=>setBio(e.target.value)} value={bio} placeholder='Tiểu sử' required></textarea>
             <button type='submit'>Lưu</button>
         </form>
-        <img className='profile-pic' src={image? URL.createObjectURL(image) : assets.logo_icon} alt="" />
+        <img className='profile-pic' src={image? URL.createObjectURL(image) : prevImage ? prevImage : assets.logo_icon} alt="" />
       </div>
     </div>
   )

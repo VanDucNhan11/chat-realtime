@@ -1,8 +1,13 @@
 import React from 'react'
 import './LeftSidebar.css'
 import assets from '../../assets/assets'
+import { useNavigate } from 'react-router-dom'
+import { logout } from '../../config/firebase'
 
 const LeftSidebar = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className='ls'>
       <div className="ls-top">
@@ -11,9 +16,9 @@ const LeftSidebar = () => {
             <div className="menu">
                 <img src={assets.menu_icon} alt="" />
                 <div className="sub-menu">
-                  <p>Cập nhật thông tin cá nhân</p>
+                  <p onClick={()=>navigate('/profile')}>Cập nhật thông tin cá nhân</p>
                   <hr />
-                  <p>Đăng xuất</p>
+                  <p onClick={() => logout()}>Đăng xuất</p>
                 </div>
             </div>
         </div>

@@ -1,9 +1,9 @@
-.chat-box{
-    height: 75vh;
+.chat-box {
+    height: 100%;
     position: relative;
     background-color: #f1f5ff;
+    overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
 }
-
 .chat-box .chat-user{
     display: flex;
     padding: 10px 15px;
@@ -90,15 +90,17 @@
     justify-content: start;
 }
 
-.msg{
+.msg {
     color: white;
     background-color: #077EFF;
     padding: 8px;
-    max-width: 200px;
-    font-size: 11px;
+    max-width: 230px; /* Tăng độ rộng tối đa cho tin nhắn */
+    font-size: 15px;
     font-weight: 300;
     border-radius: 8px 8px 0px 8px;
     margin-bottom: 30px;
+    word-break: break-word; /* Tự động xuống dòng nếu từ quá dài */
+    white-space: pre-wrap;  /* Giữ khoảng trắng và xuống dòng theo nội dung */
 }
 
 .r-msg .msg{

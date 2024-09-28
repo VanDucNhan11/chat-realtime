@@ -22,59 +22,63 @@ const ProfileUpdate = () => {
   const [prevImage, setPervImage] = useState("");
   const {setUserData} = useContext(AppContext);
 
-  const profileUpdate = async (event) =>{
-      event.preventDefault();
-      try {
-        if (!prevImage && !image) {
-          toast.error(" Vui lòng Cập nhật ảnh đại diện")
-        }
-        const docRef = doc(db,'users',uid);
-        if (image) {
-          const imgUrl = await upload(image);
-          setPervImage(imgUrl);
-          await updateDoc(docRef,{
-            avatar:imgUrl,
-            bio:bio,
-            name:name
-          })
-        }
-        else{
-          await updateDoc(docRef,{
-            bio:bio,
-            name:name
-          })
-        }
-        const snap = await getDoc(docRef);
-        setUserData(snap.data());
-        navigate('/chat');
-        toast.success("Cập nhật thông tin thành công")
-      } catch (error) {
-        console.error(error);
-        toast.error(error.message);
+  const profileUpdate = async (event) => {
+    event.preventDefault();
+    try {
+      const docRef = doc(db, 'users', uid);
+      let imgUrl = prevImage;
+  
+      // Nếu người dùng chọn ảnh mới thì tải lên ảnh mới
+      if (image) {
+        imgUrl = await upload(image);
+        setPervImage(imgUrl);
+      } else if (!prevImage) {
+        // Nếu chưa có ảnh đại diện trước đó, sử dụng ảnh avatar_icon
+        imgUrl = assets.avatar_icon;
       }
-  }
-
-  useEffect(()=>{
-    onAuthStateChanged(auth, async (user) =>{
+  
+      // Cập nhật thông tin trong CSDL với avatar (nếu có), bio, và name
+      await updateDoc(docRef, {
+        avatar: imgUrl,
+        bio: bio,
+        name: name
+      });
+  
+      const snap = await getDoc(docRef);
+      setUserData(snap.data());
+      navigate('/chat');
+      toast.success("Cập nhật thông tin thành công");
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    }
+  };
+  
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        serUid(user.uid)
-        const docRef = doc(db,"users",user.uid);
-        const docSnap = await getDoc(docRef)
-        if (docSnap.data().name) {
-          setName(docSnap.data().name)
+        serUid(user.uid);
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+  
+          if (userData.name) setName(userData.name);
+          if (userData.bio) setBio(userData.bio);
+          if (userData.avatar) {
+            setPervImage(userData.avatar);
+          } else {
+            // Nếu người dùng chưa có avatar, mặc định sử dụng avatar_icon
+            setPervImage(assets.avatar_icon);
+          }
         }
-        if (docSnap.data().bio) {
-          setBio(docSnap.data().bio)
-        }
-        if (docSnap.data().avatar) {
-          setPervImage(docSnap.data().avatar)
-        }
+      } else {
+        navigate('/');
       }
-      else {
-        navigate('/')
-      }
-    })
-  })
+    });
+  }, [navigate]);
+  
 
   return (
     <div className='profile'>

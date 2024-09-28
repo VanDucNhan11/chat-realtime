@@ -1,9 +1,9 @@
-.rs{
+.rs {
     color: white;
     background: #001030;
     position: relative;
-    height: 75vh;
-    overflow-y: scroll;
+    height: 100%;
+    overflow-y: scroll; /* Cuộn nếu nội dung vượt quá */
 }
 
 .rs-profile{

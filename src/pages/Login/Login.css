@@ -1,36 +1,44 @@
-.login{
+/* General styling for larger screens */
+.login {
     min-height: 100vh;
-    background: url(./background.png) no-repeat;
+    background: url(/background.png) no-repeat;
     background-size: cover;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    padding: 20px;
 }
 
-.login .logo{
+.login .logo {
     width: max(20vw, 200px);
 }
-.login-form{
+
+.login-form {
     background: white;
     padding: 20px 30px;
     display: flex;
     flex-direction: column;
     gap: 20px;
     border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
 }
 
-.login-form h2{
+.login-form h2 {
     font-weight: 500;
 }
 
-.form-input{
-    padding: 8px 10px;
+.form-input {
+    padding: 12px;
     border: 1px solid #c9c9c9;
     border-radius: 5px;
     outline-color: #077EFF;
+    font-size: 16px;
 }
-.login-form button{
-    padding: 10px;
+
+.login-form button {
+    padding: 12px;
     background-color: #077EFF;
     color: white;
     font-size: 16px;
@@ -39,26 +47,86 @@
     cursor: pointer;
 }
 
-.login-term{
+.login-term {
     display: flex;
     gap: 5px;
     font-size: 12px;
     color: #808080;
 }
 
-.login-forgot{
+.login-forgot {
     display: flex;
     flex-direction: column;
     gap: 5px;
-}
-
-.login-forgot{
     font-size: 13px;
     color: #5c5c5c;
 }
 
-.login-forgot span{
+.login-forgot span {
     font-weight: 500;
     color: #077EFF;
     cursor: pointer;
+}
+
+/* Responsive Design */
+
+/* For tablets and medium screens */
+@media (max-width: 768px) {
+    .login {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .login .logo {
+        width: max(25vw, 150px);
+    }
+
+    .login-form {
+        width: 90%;
+        padding: 15px 20px;
+    }
+
+    .form-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .login-form button {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* For mobile devices */
+@media (max-width: 480px) {
+    .login {
+        padding: 5px;
+    }
+
+    .login .logo {
+        width: max(30vw, 120px);
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .form-input {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .login-form button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .login-term {
+        font-size: 10px;
+    }
+
+    .login-forgot {
+        font-size: 11px;
+    }
 }

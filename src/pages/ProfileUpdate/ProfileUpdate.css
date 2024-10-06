@@ -1,40 +1,45 @@
-.profile{
+.profile {
     min-height: 100vh;
     background: url(/background.png) no-repeat;
     background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px; /* Added padding for small screens */
 }
 
-.profile-container{
+.profile-container {
     background: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 700px;
+    flex-direction: column; /* Change layout to column for small screens */
+    width: 100%;
+    max-width: 700px; /* Set a max width */
     border-radius: 10px;
+    padding: 20px; /* Adjust padding for spacing */
 }
 
-.profile-pic{
+.profile-pic {
     max-width: 160px;
     aspect-ratio: 1/1;
     margin: 20px auto;
     border-radius: 50%;
 }
 
-.profile form{
+.profile form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 40px;
+    width: 100%;
+    padding: 20px;
 }
 
-.profile form h3{
+.profile form h3 {
     font-weight: 500;
 }
 
-.profile label{
+.profile label {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -42,20 +47,21 @@
     cursor: pointer;
 }
 
-.profile label img{
+.profile label img {
     width: 50px;
     aspect-ratio: 1/1;
     border-radius: 50%;
 }
 
-.profile input,textarea{
+.profile input,
+textarea {
     padding: 10px;
-    min-width: 300px;
+    width: 100%;
     border: 1px solid #c9c9c9;
     outline-color: #077eff;
-} 
+}
 
-.profile form button{
+.profile form button {
     border: none;
     color: white;
     background-color: #077eff;
@@ -66,7 +72,7 @@
 
 @media (min-width: 768px) {
     .profile-container {
-        flex-direction: row; 
+        flex-direction: row; /* Horizontal layout for larger screens */
         padding: 40px;
     }
 
